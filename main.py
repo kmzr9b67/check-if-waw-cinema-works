@@ -11,6 +11,7 @@ import time
 URL_WEB = 'https://waw-cinema-assistant-mtfo73rvoa-lm.a.run.app/'
 LISTA = ['TODAY', 'TOMORROW', 'DAY AFTER TOMORROW']
 
+
 def make_driver():
     option = Options()
     option.add_experimental_option('detach', True)
@@ -27,14 +28,14 @@ def web_check(lista):
     time.sleep(2)
     button = browser.find_element(By.TAG_NAME, 'button')
     button.send_keys(Keys.ENTER)
-    return browser.find_element(By.TAG_NAME, 'h1').text
+    return [browser.find_element(By.TAG_NAME, 'h1').text, lista]
 
 
 def make_request(url):
     with ThreadPoolExecutor(len(LISTA)) as executor:
         for result in executor.map(web_check, LISTA):
-            if result != 'Movie recommendations in Warsaw':
-                send_mail(result)
+            if result[0] != 'Movie recommendations in Warsaw':
+                send_mail(result[1])
 
 
 def send_mail(day):
@@ -45,4 +46,5 @@ def send_mail(day):
                             msg=f"In waw-cinema-assistant there is an error in sheet: {day}")
 
 
-make_request(URL_WEB)
+if __name__ == "__main__":
+    make_request(URL_WEB)
