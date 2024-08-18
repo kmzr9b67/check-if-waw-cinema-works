@@ -1,35 +1,31 @@
 from concurrent.futures.thread import ThreadPoolExecutor
-import smtplib
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import Select
 from creds import *
+import smtplib
 import time
 
 URL_WEB = 'https://waw-cinema-assistant-mtfo73rvoa-lm.a.run.app/'
 LISTA = ['TODAY', 'TOMORROW', 'DAY AFTER TOMORROW']
 
-
 def make_driver():
     option = Options()
     option.add_experimental_option('detach', True)
-    browser = webdriver.Chrome(options=option)
-    return browser
-
+    #Setting the detach parameter to true will keep the browser
+    #open after the process has ended, so long as the quit command is not sent to the driver.
+    return webdriver.Chrome(options=option)
 
 def web_check(lista):
     browser = make_driver()
     browser.get(URL_WEB)
-    element = browser.find_element(By.ID, 'input')
-    down = Select(element)
-    down.select_by_visible_text(lista)
+    element = browser.find_element(By.ID, lista)
+    element.click()
     time.sleep(2)
     button = browser.find_element(By.TAG_NAME, 'button')
     button.send_keys(Keys.ENTER)
-    return [browser.find_element(By.TAG_NAME, 'h1').text, lista]
-
+    return [browser.find_element(By.TAG_NAME, 'h5').text, lista]
 
 def make_request(url):
     with ThreadPoolExecutor(len(LISTA)) as executor:
