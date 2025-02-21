@@ -7,7 +7,7 @@ from creds import *
 import smtplib
 import time
 
-URL_WEB = 'https://waw-cinema-assistant-mtfo73rvoa-lm.a.run.app/'
+URL_WEB = 'https://waw-cinema-assistant.app/'
 LISTA = ['TODAY', 'TOMORROW', 'DAY AFTER TOMORROW']
 
 def make_driver():
